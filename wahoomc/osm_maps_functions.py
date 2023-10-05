@@ -31,6 +31,9 @@ from wahoomc.constants import USER_DL_DIR
 
 from wahoomc.timings import Timings
 
+from wahoomc.osmiumconfig import OsmiumBatchExtractConfig, OsmiumExtract
+
+
 log = logging.getLogger('main-logger')
 
 
@@ -371,7 +374,9 @@ class OsmMaps:
         log.info('# Split filtered country files to tiles')
         timings = Timings()
         tile_count = 1
+        osmiumExtracts = [] 
         for tile in self.o_osm_data.tiles:
+
 
             for country, val in self.o_osm_data.border_countries.items():
                 if country not in tile['countries']:
@@ -382,6 +387,12 @@ class OsmMaps:
                                         f'{tile["x"]}', f'{tile["y"]}', f'split-{country}.osm.pbf')
                 out_file_names = os.path.join(USER_OUTPUT_DIR,
                                               f'{tile["x"]}', f'{tile["y"]}', f'split-{country}-names.osm.pbf')
+
+
+                #osmiumExtract = OsmiumExtract(f'split-{country}.osm.pbf', tile["x"], tile["y"], tile["left"], tile["bottom"], tile["right"], tile["top"])
+                osmiumExtract = OsmiumExtract('split.osm.pbf', tile["x"], tile["y"], tile["left"], tile["bottom"], tile["right"], tile["top"])
+                osmiumExtracts.append(osmiumExtract)
+                #write_json_file_generic("/tmp/alf.json", osmiumExtract.toJson())
 
                 # split filtered country files to tiles every time because the result is different per constants (user input)
                 # Windows
@@ -420,8 +431,8 @@ class OsmMaps:
                     cmd.extend(['-o', out_file])
                     cmd.extend(['--overwrite'])
 
-                    run_subprocess_and_log_output(
-                        cmd, '! Error in Osmium with country: {country}. macOS/out_file')
+                #    run_subprocess_and_log_output(
+                #        cmd, '! Error in Osmium with country: {country}. macOS/out_file')
 
                     cmd = ['osmium', 'extract']
                     cmd.extend(
@@ -431,12 +442,15 @@ class OsmMaps:
                     cmd.extend(['-o', out_file_names])
                     cmd.extend(['--overwrite'])
 
-                    run_subprocess_and_log_output(
-                        cmd, '! Error in Osmium with country: {country}. macOS/out_file_names')
+                #    run_subprocess_and_log_output(
+                #        cmd, '! Error in Osmium with country: {country}. macOS/out_file_names')
 
                 self.log_tile_debug(tile["x"], tile["y"], tile_count, f'{country} {timings_tile.stop_and_return()}')
 
             tile_count += 1
+
+        osmiunBatchConfig = OsmiumBatchExtractConfig("/tmp/alf/jada", osmiumExtracts)
+        write_json_file_generic("/tmp/alf.json", osmiunBatchConfig.toJson())
 
         log.info('+ Split filtered country files to tiles: OK, %s', timings.stop_and_return())
 
@@ -508,6 +522,8 @@ class OsmMaps:
             cmd.extend(['--tag-transform', 'file=' + os.path.join(RESOURCES_DIR,
                                                                   'tunnel-transform.xml'), '--wb', out_file_merged, 'omitmetadata=true'])
 
+
+            self.log_tile('merge java command: %s', cmd, tile_count)
             run_subprocess_and_log_output(
                 cmd, f'! Error in Osmosis with tile: {tile["x"]},{tile["y"]}')
 
