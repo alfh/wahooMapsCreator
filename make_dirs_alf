@@ -1,0 +1,28 @@
+sed -e"s|\\\||g" /tmp/alf.json | sed -e"s/^\"//g" -e "s/\"$//g"
+
+cat ../alf2.json |json_pp | jq .extracts[].name | sed -e"s/\"//g" -e"s|/spl.*||g" | xargs -n1 mkdir -p
+
+
+
+# France
+cd /tmp/wahoo/france
+
+sed -e"s|\\\||g" /home/alf/devel/wahoo/wahooMapsCreator/alf_split_franceIthink.json | sed -e"s/^\"//g" -e "s/\"$//g" | json_pp | jq .extracts[].name | sed -e"s/\"//g" -e"s|/spl.*||g" | xargs -n1 mkdir -p
+sed -e"s|\\\||g" /home/alf/devel/wahoo/wahooMapsCreator/alf_split_franceIthink.json | sed -e"s/^\"//g" -e "s/\"$//g"  > /tmp/wahoo/france/alf_france_temp.json
+
+/home/alf/wahooMapsDisk/_tiles
+
+sed -e "s|/tmp/alf/jada|/tmp/wahoo/france|g" alf_france_temp.json -e"s/split\.osm/split-france.osm/g"
+
+
+more tmp_france  | json_pp| sed -e"s/name/output/g" | jq '{directory: "/home/alf", extracts: [{output: .extracts[].output, output_format: "pbf", bbox: {left: "merkelig", right: "hm", top: "jada", bottom: "joda"} }]}' |more
+
+cat tmp_france |json_pp | jq .extracts[].name | sed -e"s/\"//g" -e"s|/spl.*||g" | xargs -n1 mkdir -p
+
+
+cat tmp_france  | json_pp| sed -e"s/name/output/g" | jq '{directory: "/tmp/wahoo/france", extracts: .extracts|map({output: .output, output_format: "pbf", bbox: [.left, .right, .top, .bottom]}) }' |more
+
+cat tmp_france  | json_pp| sed -e"s/name/output/g" | jq '{directory: "/tmp/wahoo/france", extracts: .extracts|map({output: .output, output_format: "pbf", bbox: [.left, .top, .right, .bottom]}) }' > first_test.json
+
+cat tmp_france  | json_pp| sed -e"s/name/output/g" | jq '{directory: "/tmp/wahoo/france", extracts: .extracts|map({output: .output, output_format: "pbf", bbox: [.left, .bottom, .right, .top]}) }' > first_test.json
+

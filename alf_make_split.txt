@@ -1,0 +1,3 @@
+alf@alf-ubuntu:/tmp/france$ sed -e"s|\\\||g" /tmp/alf.json | sed -e"s/^\"//g" -e "s/\"$//g" | tail^C
+alf@alf-ubuntu:/tmp/france$ cat ../alf2.json |json_pp | jq .extracts[].name | sed -e"s/\"//g" -e"s|/spl.*||g"
+
