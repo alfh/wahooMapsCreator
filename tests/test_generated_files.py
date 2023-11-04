@@ -160,6 +160,18 @@ class TestGeneratedFiles(unittest.TestCase):
         copy_static_maps_input_file(mode=2, country='malta')
         copy_static_maps_input_file(mode=2, country='liechtenstein')
 
+    def test_calc_output_faroe_islands_and_compare(self):
+        """
+        Test output of countries without border countries
+        - of malta
+        """
+        # run tool for country
+        self.run_wahoomapscreator_cli('faroe_islands')
+
+        # compare generated given merged.osm.pbf-file with reference-file
+#        self.compare_dir_sub_test_resource_and_output('138', 'malta')
+#        self.compare_dir_sub_test_resource_and_output('137', 'malta')
+
     def test_calc_output_malta_and_compare(self):
         """
         Test output of countries without border countries
