@@ -586,7 +586,7 @@ class OsmMaps:
 #        if int(threads) < 1:
 #            threads = 1
 
-        semaphore = asyncio.Semaphore(12)
+        semaphore = asyncio.Semaphore(8)
         tasks = set()
         timings = Timings()
         tile_count = 1
