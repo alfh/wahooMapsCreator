@@ -7,17 +7,17 @@ class OsmiumBatchExtractConfig:
         self.extracts = extracts
 
     def toJson(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
+#        return json.dumps(self, default=lambda o: o.__dict__)
+        return json.dumps({"directory": self.directory, "extracts": self.extracts}, default=lambda o: o.__dict__)
+#        return json.dumps({"directory": self.directory}, default=lambda o: o.__dict__)
 
 class OsmiumExtract:
     def __init__(self, name, tileX, tileY, left, bottom, right, top):
-        self.name = os.path.join(f'{tileX}', f'{tileY}', f'{name}')
+        self.output = os.path.join(f'{tileX}', f'{tileY}', f'{name}')
+        self.output_format = 'pbf'
         #self.tileX = tileX
         #self.tileY = tileY
-        self.left = left
-        self.bottom = bottom
-        self.right = right
-        self.top = top
+        self.bbox = [left, bottom, right, top]
 
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)

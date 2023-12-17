@@ -374,14 +374,20 @@ class OsmMaps:
         log.info('# Split filtered country files to tiles')
         timings = Timings()
         tile_count = 1
-        osmiumExtracts = [] 
-        for tile in self.o_osm_data.tiles:
+        batch_no = 1
+        osmiumBatches = []
+        osmiumNamesBatches = []
+        osmiumExtracts = []
+        osmiumNamesExtracts = []
+        osmiunBatchConfig = OsmiumBatchExtractConfig(USER_OUTPUT_DIR, osmiumExtracts)
+        osmiunNamesBatchConfig = OsmiumBatchExtractConfig(USER_OUTPUT_DIR, osmiumExtracts)
 
+        for tile in self.o_osm_data.tiles:
 
             for country, val in self.o_osm_data.border_countries.items():
                 if country not in tile['countries']:
                     continue
-                self.log_tile_info(tile["x"], tile["y"], tile_count, country)
+#                self.log_tile_info(tile["x"], tile["y"], tile_count, country)
                 timings_tile = Timings()
                 out_file = os.path.join(USER_OUTPUT_DIR,
                                         f'{tile["x"]}', f'{tile["y"]}', f'split-{country}.osm.pbf')
@@ -389,68 +395,85 @@ class OsmMaps:
                                               f'{tile["x"]}', f'{tile["y"]}', f'split-{country}-names.osm.pbf')
 
 
-                #osmiumExtract = OsmiumExtract(f'split-{country}.osm.pbf', tile["x"], tile["y"], tile["left"], tile["bottom"], tile["right"], tile["top"])
-                osmiumExtract = OsmiumExtract('split.osm.pbf', tile["x"], tile["y"], tile["left"], tile["bottom"], tile["right"], tile["top"])
+                osmiumExtract = OsmiumExtract(f'split-{country}.osm.pbf', tile["x"], tile["y"], tile["left"], tile["bottom"], tile["right"], tile["top"])
                 osmiumExtracts.append(osmiumExtract)
-                #write_json_file_generic("/tmp/alf.json", osmiumExtract.toJson())
+                osmiumNamesExtract = OsmiumExtract(f'split-{country}-names.osm.pbf', tile["x"], tile["y"], tile["left"], tile["bottom"], tile["right"], tile["top"])
+                osmiumNamesExtracts.append(osmiumNamesExtract)
 
-                # split filtered country files to tiles every time because the result is different per constants (user input)
-                # Windows
-                if platform.system() == "Windows":
-                    cmd = [self.osmconvert_path,
-                           '-v', '--hash-memory=2500']
-                    cmd.append('-b='+f'{tile["left"]}' + ',' + f'{tile["bottom"]}' +
-                               ',' + f'{tile["right"]}' + ',' + f'{tile["top"]}')
-                    cmd.extend(
-                        ['--complete-ways', '--complete-multipolygons', '--complete-boundaries'])
-                    cmd.append(val['filtered_file'])
-                    cmd.append('-o='+out_file)
+                if len(osmiumExtracts) > 32:
+                    osmiumBatches.append(osmiunBatchConfig)
+                    osmiumNamesBatches.append(osmiunNamesBatchConfig)
+                    batch_no += 1
+#                    log.info(f'New batch {batch_no}, {tile_count}')
+                    osmiumExtracts = []
+                    osmiumNamesExtracts = []
+                    osmiunBatchConfig = OsmiumBatchExtractConfig(USER_OUTPUT_DIR, osmiumExtracts)
+                    osmiunNamesBatchConfig = OsmiumBatchExtractConfig(USER_OUTPUT_DIR, osmiumNamesExtracts)
 
-                    run_subprocess_and_log_output(
-                        cmd, f'! Error in osmconvert with country: {country}. Win/out_file')
-
-                    cmd = [self.osmconvert_path,
-                           '-v', '--hash-memory=2500']
-                    cmd.append('-b='+f'{tile["left"]}' + ',' + f'{tile["bottom"]}' +
-                               ',' + f'{tile["right"]}' + ',' + f'{tile["top"]}')
-                    cmd.extend(
-                        ['--complete-ways', '--complete-multipolygons', '--complete-boundaries'])
-                    cmd.append(val['filtered_file_names'])
-                    cmd.append('-o='+out_file_names)
-
-                    run_subprocess_and_log_output(
-                        cmd, '! Error in osmconvert with country: {country}. Win/out_file_names')
-
-                # Non-Windows
-                else:
-                    cmd = ['osmium', 'extract']
-                    cmd.extend(
-                        ['-b', f'{tile["left"]},{tile["bottom"]},{tile["right"]},{tile["top"]}'])
-                    cmd.append(val['filtered_file'])
-                    cmd.extend(['-s', 'smart'])
-                    cmd.extend(['-o', out_file])
-                    cmd.extend(['--overwrite'])
-
-                #    run_subprocess_and_log_output(
-                #        cmd, '! Error in Osmium with country: {country}. macOS/out_file')
-
-                    cmd = ['osmium', 'extract']
-                    cmd.extend(
-                        ['-b', f'{tile["left"]},{tile["bottom"]},{tile["right"]},{tile["top"]}'])
-                    cmd.append(val['filtered_file_names'])
-                    cmd.extend(['-s', 'smart'])
-                    cmd.extend(['-o', out_file_names])
-                    cmd.extend(['--overwrite'])
-
-                #    run_subprocess_and_log_output(
-                #        cmd, '! Error in Osmium with country: {country}. macOS/out_file_names')
-
-                self.log_tile_debug(tile["x"], tile["y"], tile_count, f'{country} {timings_tile.stop_and_return()}')
-
+#            log.info(f'Tile {tile_count}')
             tile_count += 1
 
-        osmiunBatchConfig = OsmiumBatchExtractConfig("/tmp/alf/jada", osmiumExtracts)
-        write_json_file_generic("/tmp/alf.json", osmiunBatchConfig.toJson())
+        if len(osmiumExtracts) > 0:
+            osmiumBatches.append(osmiunBatchConfig)
+            osmiumNamesBatches.append(osmiunNamesBatchConfig)
+
+        batch_no = 1
+        for batch in osmiumBatches:
+            timings_tile = Timings()
+            batch_filename = os.path.join('/tmp/alf/', f'batch-{batch_no}.json')
+            log.info(f'Write batch file {batch_filename}')
+#            write_json_file_generic(os.path.join('/tmp/alf/', batch.filename), batch.toJson())
+#            batch_complete = { "directory": USER_OUTPUT_DIR, "extracts": batch }
+#            write_json_file_generic(os.path.join('/tmp/alf/', f'batch-{batch_no}'), batch_complete)
+#            write_json_file_generic(os.path.join('/tmp/alf/', f'batch-{batch_no}-array'), batch)
+            with open(batch_filename, mode='w', encoding="utf-8") as output_file:
+                output_file.write(batch.toJson())
+
+            log.info(f'Process batch file {batch_filename}')
+
+            # split filtered country files to tiles every time because the result is different per constants (user input)
+            cmd = ['osmium', 'extract']
+            cmd.extend(['-c', batch_filename])
+            cmd.append(val['filtered_file'])
+            cmd.extend(['-s', 'smart'])
+            cmd.extend(['--overwrite'])
+
+            run_subprocess_and_log_output(
+                cmd, '! Error in Osmium with country: {country}. out_file')
+
+#                self.log_tile_debug(tile["x"], tile["y"], tile_count, f'{country} {timings_tile.stop_and_return()}')
+
+            log.info('Done processing batch %s with %s tiles, took %s', batch_no, len(batch.extracts), timings_tile.stop_and_return())
+            batch_no += 1
+
+        batch_no = 1
+        for batch in osmiumNamesBatches:
+            timings_tile = Timings()
+            batch_filename = os.path.join('/tmp/alf/', f'batch-names-{batch_no}.json')
+            log.info(f'Write batch file {batch_filename}')
+#            write_json_file_generic(os.path.join('/tmp/alf/', batch.filename), batch.toJson())
+#            batch_complete = { "directory": USER_OUTPUT_DIR, "extracts": batch }
+#            write_json_file_generic(os.path.join('/tmp/alf/', f'batch-{batch_no}'), batch_complete)
+#            write_json_file_generic(os.path.join('/tmp/alf/', f'batch-{batch_no}-array'), batch)
+            with open(batch_filename, mode='w', encoding="utf-8") as output_file:
+                output_file.write(batch.toJson())
+
+            log.info(f'Process batch file {batch_filename}')
+
+            # split filtered country files to tiles every time because the result is different per constants (user input)
+            cmd = ['osmium', 'extract']
+            cmd.extend(['-c', batch_filename])
+            cmd.append(val['filtered_file_names'])
+            cmd.extend(['-s', 'smart'])
+            cmd.extend(['--overwrite'])
+
+            run_subprocess_and_log_output(
+                cmd, '! Error in Osmium with country: {country}. out_file')
+
+#                self.log_tile_debug(tile["x"], tile["y"], tile_count, f'{country} {timings_tile.stop_and_return()}')
+                
+            log.info('Done processing batch %s with %s tiles, took %s', batch_no, len(batch.extracts), timings_tile.stop_and_return())
+            batch_no += 1
 
         log.info('+ Split filtered country files to tiles: OK, %s', timings.stop_and_return())
 
