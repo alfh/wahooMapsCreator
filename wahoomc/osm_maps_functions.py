@@ -367,24 +367,23 @@ class OsmMaps:
                 # split filtered country files to tiles every time because the result is different per constants (user input)
                 # Windows
                 if platform.system() == "Windows":
-                    cmd = [self.osmconvert_path,
-                           '-v', '--hash-memory=2500']
-                    cmd.append('-b='+f'{tile["left"]}' + ',' + f'{tile["bottom"]}' +
-                               ',' + f'{tile["right"]}' + ',' + f'{tile["top"]}')
-                    cmd.extend(
-                        ['--complete-ways', '--complete-multipolygons', '--complete-boundaries'])
+                    cmd_and_start_args = [self.osmconvert_path, '-v', '--hash-memory=2500']
+                    box_arg_value = '-b='+f'{tile["left"]}' + ',' + f'{tile["bottom"]}' +
+                               ',' + f'{tile["right"]}' + ',' + f'{tile["top"]}'
+                    options_arg_value = ['--complete-ways', '--complete-multipolygons', '--complete-boundaries']
+
+                    cmd = cmd_and_start_args
+                    cmd.append(box_arg_value)
+                    cmd.extend(options_arg_value)
                     cmd.append(val['filtered_file'])
                     cmd.append('-o='+out_file)
 
                     run_subprocess_and_log_output(
                         cmd, f'! Error in osmconvert with country: {country}. Win/out_file')
 
-                    cmd = [self.osmconvert_path,
-                           '-v', '--hash-memory=2500']
-                    cmd.append('-b='+f'{tile["left"]}' + ',' + f'{tile["bottom"]}' +
-                               ',' + f'{tile["right"]}' + ',' + f'{tile["top"]}')
-                    cmd.extend(
-                        ['--complete-ways', '--complete-multipolygons', '--complete-boundaries'])
+                    cmd = cmd_and_start_args
+                    cmd.append(box_arg_value)
+                    cmd.extend(options_arg_value)
                     cmd.append(val['filtered_file_names'])
                     cmd.append('-o='+out_file_names)
 
@@ -393,24 +392,24 @@ class OsmMaps:
 
                 # Non-Windows
                 else:
-                    cmd = ['osmium', 'extract']
-                    cmd.extend(
-                        ['-b', f'{tile["left"]},{tile["bottom"]},{tile["right"]},{tile["top"]}'])
+                    cmd_and_start_args = ['osmium', 'extract']
+                    box_arg_value = ['-b', f'{tile["left"]},{tile["bottom"]},{tile["right"]},{tile["top"]}']
+                    options_arg_value = ['-s', 'smart', '--overwrite']
+
+                    cmd = cmd_and_start_args
+                    cmd.extend(box_arg_value)
                     cmd.append(val['filtered_file'])
-                    cmd.extend(['-s', 'smart'])
+                    cmd.extend(options_arg_value)
                     cmd.extend(['-o', out_file])
-                    cmd.extend(['--overwrite'])
 
                     run_subprocess_and_log_output(
                         cmd, '! Error in Osmium with country: {country}. macOS/out_file')
 
-                    cmd = ['osmium', 'extract']
-                    cmd.extend(
-                        ['-b', f'{tile["left"]},{tile["bottom"]},{tile["right"]},{tile["top"]}'])
+                    cmd = cmd_and_start_args
+                    cmd.extend(box_arg_value)
                     cmd.append(val['filtered_file_names'])
-                    cmd.extend(['-s', 'smart'])
+                    cmd.extend(options_arg_value)
                     cmd.extend(['-o', out_file_names])
-                    cmd.extend(['--overwrite'])
 
                     run_subprocess_and_log_output(
                         cmd, '! Error in Osmium with country: {country}. macOS/out_file_names')
