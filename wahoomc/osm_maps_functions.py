@@ -222,17 +222,12 @@ class OsmMaps:
             if not os.path.isfile(land_file) or self.o_osm_data.force_processing is True:
                 self.log_tile_info(tile["x"], tile["y"], tile_count)
                 cmd = ['ogr2ogr', '-overwrite', '-skipfailures']
-                # Try to prevent getting outside of the +/-180 and +/- 90 degrees borders. Normally the +/- 0.1 are there to prevent white lines at border borders.
-                if tile["x"] == 255 or tile["y"] == 255 or tile["x"] == 0 or tile["y"] == 0:
-                    cmd.extend(['-spat', f'{tile["left"]:.6f}',
-                                f'{tile["bottom"]:.6f}',
-                                f'{tile["right"]:.6f}',
-                                f'{tile["top"]:.6f}'])
-                else:
-                    cmd.extend(['-spat', f'{tile["left"]-0.1:.6f}',
-                                f'{tile["bottom"]-0.1:.6f}',
-                                f'{tile["right"]+0.1:.6f}',
-                                f'{tile["top"]+0.1:.6f}'])
+                tile_adjust = self.get_tile_border_adjustment(tile["x"], tile["y"])
+                cmd.extend(['-spat',
+                            f'{tile["left"]-tile_adjust:.6f}',
+                            f'{tile["bottom"]-tile_adjust:.6f}',
+                            f'{tile["right"]+tile_adjust:.6f}',
+                            f'{tile["top"]+tile_adjust:.6f}'])
                 cmd.append(land_file)
                 cmd.append(LAND_POLYGONS_PATH)
 
@@ -276,25 +271,11 @@ class OsmMaps:
                 with open(os.path.join(RESOURCES_DIR, 'sea.osm'), encoding="utf-8") as sea_file:
                     sea_data = sea_file.read()
 
-                    # Try to prevent getting outside of the +/-180 and +/- 90 degrees borders. Normally the +/- 0.1 are there to prevent white lines at tile borders
-                    if tile["x"] == 255 or tile["y"] == 255 or tile["x"] == 0 or tile["y"] == 0:
-                        sea_data = sea_data.replace(
-                            '$LEFT', f'{tile["left"]:.6f}')
-                        sea_data = sea_data.replace(
-                            '$BOTTOM', f'{tile["bottom"]:.6f}')
-                        sea_data = sea_data.replace(
-                            '$RIGHT', f'{tile["right"]:.6f}')
-                        sea_data = sea_data.replace(
-                            '$TOP', f'{tile["top"]:.6f}')
-                    else:
-                        sea_data = sea_data.replace(
-                            '$LEFT', f'{tile["left"]-0.1:.6f}')
-                        sea_data = sea_data.replace(
-                            '$BOTTOM', f'{tile["bottom"]-0.1:.6f}')
-                        sea_data = sea_data.replace(
-                            '$RIGHT', f'{tile["right"]+0.1:.6f}')
-                        sea_data = sea_data.replace(
-                            '$TOP', f'{tile["top"]+0.1:.6f}')
+                    tile_adjust = self.get_tile_border_adjustment(tile["x"], tile["y"])
+                    sea_data = sea_data.replace('$LEFT', f'{tile["left"]-tile_adjust:.6f}')
+                    sea_data = sea_data.replace('$BOTTOM', f'{tile["bottom"]-tile_adjust:.6f}')
+                    sea_data = sea_data.replace('$RIGHT', f'{tile["right"]+tile_adjust:.6f}')
+                    sea_data = sea_data.replace('$TOP', f'{tile["top"]+tile_adjust:.6f}')
 
                     with open(out_file_sea, mode='w', encoding="utf-8") as output_file:
                         output_file.write(sea_data)
@@ -770,6 +751,16 @@ class OsmMaps:
             last_changed_is_identical = False
 
         return last_changed_is_identical
+
+    def get_tile_border_adjustment(self, tile_x, tile_y):
+        """
+        return tile border adjustment to prevent white lines at tile borders
+        """
+        # Try to prevent getting outside of the +/-180 and +/- 90 degrees borders. Normally the +/- 0.1 are there to prevent white lines at tile borders
+        if tile_x == 255 or tile_y == 255 or tile_x == 0 or tile_x == 0:
+            return 0
+        else:
+            return 0.1
 
     def log_tile_info(self, tile_x, tile_y, tile_count, additional_info=''):
         """
