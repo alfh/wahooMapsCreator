@@ -10,7 +10,7 @@ import platform
 import shutil
 from pathlib import Path
 import sys
-import pkg_resources
+import packaging.version
 
 # import custom python packages
 from wahoomc.file_directory_functions import move_content, write_json_file_generic, \
@@ -63,7 +63,7 @@ def adjustments_due_to_breaking_changes():
     # file-names of filteres country files were uniformed in #153.
     # due to that old files are sometimes no longer accessed and files in the _tiles folder are deleted here.
     if version_last_run is None or \
-            pkg_resources.parse_version(VERSION) <= pkg_resources.parse_version('2.0.2'):
+            packaging.version.Version(VERSION) <= packaging.version.Version('2.0.2'):
         log.info(
             'Last run was with version %s, deleting files of %s directory due to breaking changes.', version_last_run, USER_OUTPUT_DIR)
         delete_o5m_pbf_files_in_folder(USER_OUTPUT_DIR)
@@ -71,7 +71,7 @@ def adjustments_due_to_breaking_changes():
     # file-names of downloaded .osm.pbf raw mapfiles was adjusted in #182 to focus on geofabrik naming
     # other existing files may therefor not be accessed anymore in the future and therefore deleted
     if version_last_run is None or \
-            pkg_resources.parse_version(VERSION) < pkg_resources.parse_version('4.0.0a0'):
+            packaging.version.Version(VERSION) < packaging.version.Version('4.0.0a0'):
         log.info(
             'Last run was with version %s, deleting files of %s directory due to breaking changes.', version_last_run, USER_MAPS_DIR)
         delete_o5m_pbf_files_in_folder(USER_MAPS_DIR)
@@ -275,7 +275,7 @@ def check_installed_version_against_latest_pypi():
 
     # compare installed version against latest and issue a info if a new version is available
     if latest_version \
-            and pkg_resources.parse_version(VERSION) < pkg_resources.parse_version(latest_version):
+            and packaging.version.Version(VERSION) < packaging.version.Version(latest_version):
         log.info('\n\nUpdate available! \
                 \nA new version of wahoomc is available: "%s". You have installed version "%s". \
                 \nUpgrade wahoomc with "pip install wahoomc --upgrade". \
