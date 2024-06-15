@@ -2,8 +2,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python Debugger: Current File (Integrated Terminal)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "env": {
+                "PATH": "/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            }
+        },
+        {
             "name": "x/y: 134/88 (stuttgart)",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -19,7 +29,7 @@
         },
         {
             "name": "x/y: 134/88,134/87 (STG+HN)",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -35,7 +45,7 @@
         },
         {
             "name": "co: germany",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -47,7 +57,7 @@
         },
         {
             "name": "co: malta (no POI)",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -65,7 +75,7 @@
         },
         {
             "name": "co: malta NO -fp",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -80,7 +90,7 @@
         },
         {
             "name": "x/y: 138/100 (malta)",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -96,7 +106,7 @@
         },
         {
             "name": "co: malta - contour",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -114,7 +124,7 @@
         },
         {
             "name": "x/y: 135/91 (gardasee) #160",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -130,7 +140,7 @@
         },
         {
             "name": "gui",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -140,7 +150,7 @@
         },
         {
             "name": "cli help",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -150,7 +160,7 @@
         },
         {
             "name": "cli.init",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc.init",
             "console": "integratedTerminal",
@@ -158,7 +168,7 @@
         },
         {
             "name": "x/y: 133/88 (germany&france)",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -171,7 +181,7 @@
         },
         {
             "name": "x/y: 134/89 (bodensee 4 countries)",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -184,7 +194,7 @@
         },
         {
             "name": "x/y: 72/98 (virginia)",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -200,7 +210,7 @@
         },
         {
             "name": "co: virginia -nbc",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -217,7 +227,7 @@
         },
         {
             "name": "x/y: stg->gardasee (ten tiles)",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -229,7 +239,7 @@
         },
         {
             "name": "co: mexico #113",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -243,7 +253,7 @@
         },
         {
             "name": "co: solomon_islands",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -258,7 +268,7 @@
         },
         {
             "name": "country: liechtenstein & suisse",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -273,7 +283,7 @@
         },
         {
             "name": "country: malta & liechtenstein",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -288,7 +298,7 @@
         },
         {
             "name": "co: france",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
@@ -305,7 +315,7 @@
         },
         {
             "name": "xy: Plauen - contour #145",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "wahoomc",
             "console": "integratedTerminal",
