@@ -2,43 +2,34 @@
 tests for the python file
 """
 import os
-import unittest
 
 # import custom python packages
 
 
-class TestCli(unittest.TestCase):
+def test_top_parser_help():
     """
-    tests for the CLI of the python file
+    tests, if help of top parser can be called
     """
 
-    def test_top_parser_help(self):
-        """
-        tests, if help of top parser can be called
-        """
+    result = os.system("python -m wahoomc -h")
 
-        result = os.system("python -m wahoomc -h")
+    assert result == 0
 
-        self.assertEqual(result, 0)
+def test_cli_help():
+    """
+    tests, if CLI help can be called
+    """
 
-    def test_cli_help(self):
-        """
-        tests, if CLI help can be called
-        """
+    print("alf")
+    result = os.system("python -m wahoomc cli -h")
 
-        result = os.system("python -m wahoomc cli -h")
+    assert result == 0
 
-        self.assertEqual(result, 0)
+def test_gui_help():
+    """
+    tests, if GUI help can be called
+    """
 
-    def test_gui_help(self):
-        """
-        tests, if GUI help can be called
-        """
+    result = os.system("python -m wahoomc gui -h")
 
-        result = os.system("python -m wahoomc gui -h")
-
-        self.assertEqual(result, 0)
-
-
-if __name__ == '__main__':
-    unittest.main()
+    assert result == 0
