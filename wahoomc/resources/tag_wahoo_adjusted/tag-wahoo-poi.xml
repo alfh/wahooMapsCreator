@@ -8,8 +8,27 @@
     <osm-tag key="amenity" value="cafe" zoom-appear="14" />
     <osm-tag key="amenity" value="drinking_water" zoom-appear="14" />
     <osm-tag key="amenity" value="shelter" zoom-appear="10" />
+    <osm-tag key="amenity" value="ice_cream" zoom-appear="14" />
+    <osm-tag key="amenity" value="police" zoom-appear="14" />
+    <osm-tag key="amenity" value="pharmacy" zoom-appear="13" />
+    <osm-tag key="amenity" value="toilets" zoom-appear="12" />
+    <osm-tag key="amenity" value="marketplace" zoom-appear="13" />
+    <osm-tag key="amenity" value="bicycle_repair_station" zoom-appear="11" />
+    <osm-tag key="amenity" value="bicycle_parking" zoom-appear="14" />
+    <osm-tag key="amenity" value="bicycle_wash" zoom-appear="14" />
+    <osm-tag key="amenity" value="ferry_terminal" zoom-appear="12" />
+
     <osm-tag key="shop" value="bakery" zoom-appear="14" />
     <osm-tag key="shop" value="bicycle" zoom-appear="14" />
+    <osm-tag key="shop" value="ice_cream" zoom-appear="14" />
+    <osm-tag key="shop" value="convenience" zoom-appear="13" />
+    <osm-tag key="shop" value="supermarket" zoom-appear="13" />
+    <osm-tag key="shop" value="farm" zoom-appear="14" />
+    <osm-tag key="shop" value="dairy" zoom-appear="14" />
+
+    <osm-tag key="vending" value="food" zoom-appear="14" />
+    <osm-tag key="vending" value="drinks" zoom-appear="14" />
+    <osm-tag key="vending" value="water" zoom-appear="14" />
 
     <osm-tag key="railway" value="station" zoom-appear="13" />
     <osm-tag key="railway" value="stop" zoom-appear="13" />
@@ -22,8 +41,14 @@
     <osm-tag key="amenity" label-position="true" value="cafe" zoom-appear="14" />
     <osm-tag key="amenity" label-position="true" value="drinking_water" zoom-appear="14" />
     <osm-tag key="amenity" value="shelter" zoom-appear="10" />
+    <osm-tag key="amenity" label-position="true" value="townhall" zoom-appear="12" />
+    <osm-tag key="amenity" label-position="true" value="hospital" zoom-appear="10" />
+    <osm-tag key="amenity" label-position="true" value="ferry_terminal" zoom-appear="12" />
+
     <osm-tag key="shop" label-position="true" value="bakery" zoom-appear="14" />
     <osm-tag key="shop" label-position="true" value="bicycle" zoom-appear="14" />
+    <osm-tag key="shop" label-position="true" value="supermarket" zoom-appear="14" />
+    <osm-tag key="shop" label-position="true" value="convenience" zoom-appear="14" />
 
     <osm-tag key="railway" label-position="true" value="station" zoom-appear="13" />
     <osm-tag key="railway" label-position="true" value="stop" zoom-appear="13" />

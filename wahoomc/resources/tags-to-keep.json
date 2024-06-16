@@ -12,11 +12,32 @@
             "fuel",
             "cafe",
             "drinking_water",
-            "shelter"
+            "shelter",
+            "ice_cream",
+            "townhall",
+            "police",
+            "hospital",
+            "pharmacy",
+            "toilets",
+            "marketplace",
+            "bicycle_repair_station",
+            "bicycle_parking",
+            "bicycle_wash",
+            "ferry_terminal"
         ],
         "shop": [
             "bakery",
-            "bicycle"
+            "bicycle",
+            "ice_cream",
+            "convenience",
+            "supermarket",
+            "farm",
+            "dairy"
+        ],
+        "vending": [
+            "food",
+            "drinks",
+            "ice_cream"
         ],
         "highway": [
             "abandoned",
